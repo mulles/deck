@@ -47,7 +47,7 @@
 					@click="actionEdit">
 					{{ t('deck', 'Edit board') }}
 				</NcActionButton>
-				<NcActionButton v-if="canManage && !board.archived"
+				<NcActionButton v-if="canCreate && !board.archived"
 					:close-after-click="true"
 					@click="actionClone">
 					<template #icon>
@@ -184,6 +184,7 @@ export default {
 			editColor: '',
 			isDueSubmenuActive: false,
 			updateDueSetting: null,
+			canCreate: canCreateState,
 		}
 	},
 	computed: {
@@ -252,6 +253,9 @@ export default {
 			try {
 				const newBoard = await this.$store.dispatch('cloneBoard', this.board)
 				this.loading = false
+				if (newBoard instanceof Error) {
+					throw newBoard
+				}
 				this.$router.push({ name: 'board', params: { id: newBoard.id } })
 			} catch (e) {
 				OC.Notification.showTemporary(t('deck', 'An error occurred'))
