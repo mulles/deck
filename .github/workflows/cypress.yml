@@ -76,6 +76,7 @@ jobs:
           PHP_CLI_SERVER_WORKERS: 10
         run: |
           mkdir data
+          touch config/config.php
           php occ maintenance:install --verbose --database=${{ matrix.databases }} --database-name=nextcloud --database-host=127.0.0.1 --database-port=$DB_PORT --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass admin
           php occ config:system:set memcache.local --value="\\OC\\Memcache\\APCu"
           php occ config:system:set debug --value=true --type=boolean
@@ -88,6 +89,7 @@ jobs:
           php occ app:list
           cd apps/deck
           composer install --no-dev
+          ls -la vendor
           npm ci
           npm run build
           cd ../../
